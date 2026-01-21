@@ -10,5 +10,25 @@ CHIP FullAdder {
         carry;   // Left bit of a + b + c
 
     PARTS:
-    //// Replace this comment with your code.
+    HalfAdder(a=a , b=b , sum=sum1 , carry=carry1 );
+    
+    // The sum of the second Half-adder gives us
+    // the final sum because it does
+    // (A exclusive or B) exclusive or C
+    // and that only gives 1 when either one or all three
+    // of [a,b,c] are 1, 0 otherwise.
+
+    HalfAdder(a=sum1 , b=c , sum=sum , carry=carry2 );
+
+    // This OR gives the carry because it says either
+    // (i) a and b are 1, in which case carry will be 1
+    // since the sum is already at 2.
+    // (ii) one of [a, b] is 1, and c is 1 
+    // (carry2 = (A exclusive or B) * C
+    // So the OR here basically checks that at least two
+    // of [a,b,c] are 1. 
+    Or(a=carry1 , b=carry2 , out=carry );
+
+
+    
 }
