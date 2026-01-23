@@ -40,5 +40,42 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
-    //// Replace this comment with your code.
+    // Doing "~zx & x" would have worked, but notzx here needs to be all 1s or 0s
+    // right now the code below is just setting the LSB to 1 or 0 and the rest are 0s.
+    // Nand2Tetris doesn’t give an easy “broadcast bit to bus” primitive so i'll
+    // just use MUX i.e. can't turn 1 bit zx to 16 bit ~zx easily.
+
+    //Not(in=zx, out=notzx);
+    //Not(in=zy, out=notzy);
+    //And16(a[0]=notzx, b=x, out=zerox);
+    //And16(a[0]=notzy, b=y, out=zeroy);
+    
+    // conditional zeroing of x and y
+    Mux16(a=x , b=false, sel=zx, out=zerox);
+    Mux16(a=y , b=false, sel=zy, out=zeroy);
+
+    //conditional negation of x and y
+    Not16(in=zerox, out=notx);
+    Not16(in=zeroy, out=noty);
+    Mux16(a=zerox, b=notx, sel=nx, out=transx);
+    Mux16(a=zeroy, b=noty, sel=ny, out=transy);
+
+    //addition or conjuction
+    And16(a=transx, b=transy, out=conj);
+    Add16(a=transx, b=transy, out=sum);
+    Mux16(a=conj, b=sum, sel=f, out=res);
+
+    //final negation
+    Not16(in=res, out=notres);
+    Mux16(a=res, b=notres, sel=no, out=out);
+
+
+
+
+
+
+
+
+
+
 }
