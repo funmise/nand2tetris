@@ -72,11 +72,12 @@ CHIP ALU {
      out[0..7]=outLSB, out[8..14]=outMSB, out[15] = outMSBbit);
 
     // zr implementaion
-    // there is no Or16way, and I can't use Or8way with finalOut directly because 
+    // there is no Or16way, and I can't use Or8way with out (was finalOut) directly because 
     // 'Internal pins (in this case: finalOut) cannot be subscripted or indexed'
-    // so gonna have to do this the hard way.
+
     // BUT, the langauge does allow multiple outputs and 
-    // Sub-busing (indexing) internal pins pg 390
+    // Sub-busing (indexing) input and output pins of the implemented
+    // chip or the input and output pins of its chip-parts  pg 390
 
     Or8Way(in=outLSB, out=Or1);
     Or8Way(in[0..6]=outMSB, in[7]=outMSBbit, out=Or2);
