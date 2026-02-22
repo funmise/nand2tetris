@@ -13,5 +13,33 @@ CHIP PC {
     OUT out[16];
     
     PARTS:
-    //// Replace this comment with your code.
+
+    Or(a=reset, b=load, out=resetOrLoad);
+    Or(a=resetOrLoad, b=inc, out=resetOrLoadOrInc);
+
+    Register(in=finalResult, load=resetOrLoadOrInc, out=out, out=initialInput);
+
+    Inc16(in=initialInput, out=outInc);
+    Mux16(a=initialInput, b=outInc, sel=inc, out=out1);
+    Mux16(a=out1, b=in, sel=load, out=out2);
+    Mux16(a=out2, b=false, sel=reset, out=finalResult );
+
+    // Can't do 2nd half this way, need to reverse order 
+    // since when multiple bits are set only the first 
+    // bit as defined by the spec should work. So commented
+    // the last half out
+    
+    //Mux16(a=initialInput, b=false, sel=reset, out=out1);
+    //Mux16(a=out1, b=in, sel=load, out=out2);
+    //Inc16(in=out2, out=out3);
+    //Mux16(a=out2, b=out3, sel=inc, out=finalResult);
+    
+
+    // this didn't work at all, the register needs
+    // to get the value back to store
+
+    //Mux16(a=in, b=false, sel=reset, out=out1);
+    //Register(in=in, load=load, out=out2);
+    //Inc16(in=out2, out=outInc);
+    //Mux16(a=out2, b=outInc, sel=inc, out=out);
 }
